@@ -1,7 +1,7 @@
 <?php
 
 
-namespace apps\enum\classier;
+namespace enum\classier;
 
 
 use ReflectionException;

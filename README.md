@@ -1,5 +1,6 @@
 ﻿PHP Enum 1.0.0
 ===============
+>The simplest and fastest PHP enumeration, supports `then` matching callback
 
 # 1. composer install
 
@@ -11,7 +12,7 @@ composer require wgx954418992/php-enum
 
 ```php
 
-class OrderStatus extends \apps\enum\classier\Enum
+class OrderStatus extends \enum\classier\Enum
 {
     public const WAIT_PAY = ['text' => '待支付'];
 
