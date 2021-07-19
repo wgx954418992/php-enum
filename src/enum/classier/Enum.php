@@ -11,22 +11,22 @@ abstract class Enum
 {
 
     /**
-     * Default value
-     * @var null
-     */
-    public const __default = null;
-
-    /**
-     * value
+     * const name
      * @var mixed|null
      */
-    protected $value;
+    protected $constName;
 
     /**
-     * is strict
-     * @var bool
+     * const value
+     * @var mixed|null
      */
-    protected $strict;
+    protected $constValue;
+
+    /**
+     * real value
+     * @var mixed|null
+     */
+    protected $realValue;
 
     /**
      * constants
@@ -42,28 +42,45 @@ abstract class Enum
 
     /**
      * BaseEnum constructor.
-     * @param null $initialValue
-     * @param bool $strict
+     * @param null $constValue
      * @throws ReflectionException
      * @throws Exception
      */
-    public function __construct($initialValue = self::__default, bool $strict = true)
+    public function __construct($constValue = null)
     {
-        if ($initialValue instanceof Enum) $initialValue = $initialValue->value;
-
-        $this->constants = Utils::getConstants($this);
-
-        unset($this->constants['__default']);
-
-        if ($initialValue === null) $initialValue = self::__default;
-
-        if (!in_array($initialValue, $this->constants, $strict)) {
-            throw new Exception("Value is not in enum " . __CLASS__);
+        if ($constValue instanceof Enum) {
+            $this->constValue = $constValue->constValue;
+        } else {
+            $this->constValue = $constValue;
         }
 
-        $this->value = $initialValue;
+        $reflection = Utils::getReflection($this);
 
-        $this->strict = $strict;
+        $this->constants = Utils::getConstants($reflection);
+
+        if (count($this->constants) != count(array_unique($this->constants))) {
+            throw new Exception("Constant values cannot be repeated " . __CLASS__);
+        }
+
+        if (!in_array($this->constValue, $this->constants)) {
+            throw new Exception("Const Value: {$this->constValue} is not in enum " . __CLASS__);
+        }
+
+        $this->constName = array_search($this->constValue, $this->constants);
+
+        $methodName = 'get' . Utils::toFirstUppercase(strtolower($this->constName), '_');
+
+        if (method_exists($this, $methodName)) {
+            $this->realValue = call_user_func([$this, $methodName]);
+        } else {
+            $staticName = "_" . $this->constants[$this->constName];
+
+            $staticProperties = Utils::getStaticProperties($reflection);
+
+            if (isset($staticProperties[$staticName])) {
+                $this->realValue = $staticProperties[$staticName];
+            }
+        }
     }
 
     /**
@@ -117,26 +134,35 @@ abstract class Enum
      */
     public function equals($object): bool
     {
-        $value = $object instanceof Enum ? $object->value : $object;
+        $constValue = $object instanceof Enum ? $object->constValue : $object;
 
-        return $this->strict ? ($this->value === $value) : ($this->value == $value);
+        return $this->constValue == $constValue;
     }
 
     /**
-     * @return mixed|null
+     * value
+     * @return int|mixed|string|null
+     */
+    public function getName()
+    {
+        return $this->constName;
+    }
+
+    /**
+     * const value
+     * @return int|mixed|string|null
+     */
+    public function getRawValue()
+    {
+        return $this->constValue;
+    }
+
+    /**
+     * Value from get Method or Static Property
+     * @return int|mixed|string|null
      */
     public function getValue()
     {
-        return $this->value;
+        return $this->realValue ?? $this->constValue;
     }
-
-    /**
-     * to string
-     * @return string
-     */
-    public function __toString()
-    {
-        return (string)$this->value;
-    }
-
 }
