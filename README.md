@@ -1,5 +1,6 @@
 ﻿PHP Enum 1.0.0
 ===============
+[简体中文](README-zh.md)
 >The simplest and fastest PHP enumeration, supports `then` matching callback and Specific `value`
 
 # 1. composer install

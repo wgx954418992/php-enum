@@ -1,5 +1,6 @@
 ﻿PHP Enum 1.0.0
 ===============
+[English](README.md)
 >最简单、最快的PHP枚举，支持` then`匹配回调和特定`value`
 
 # 1. 通过composer 安装
