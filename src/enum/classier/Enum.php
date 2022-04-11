@@ -126,9 +126,16 @@ abstract class Enum
             $this->realValue = $instance->realValue;
         }
 
-        if (is_null($this->constValue)) {
-            throw new Exception("Const Value: {$constValue} is not in enum " . __CLASS__);
-        }
+        if (is_null($this->constValue)) $this->onConstValueNotInEnumError($constValue);
+    }
+
+    /**
+     * error text
+     * @throws Exception
+     */
+    public function onConstValueNotInEnumError($constValue)
+    {
+        throw new Exception("Const Value: {$constValue} is not in enum " . __CLASS__);
     }
 
     /**
