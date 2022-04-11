@@ -60,7 +60,8 @@ abstract class Enum
 
     /**
      * instance
-     * @return static
+     * @param null $constValue
+     * @return void|static
      * @throws ReflectionException
      * @throws Exception
      */
@@ -71,11 +72,23 @@ abstract class Enum
         if ($constValue instanceof Enum) $constValue = $constValue->constValue;
 
         foreach ($constants as $instance) {
-            if ($instance->constValue === $constValue) return $instance;
+            if ($instance->constValue === $constValue) {
+                return clone $instance;
+            }
         }
 
+        self::onConstValueNotInEnumError($constValue);
+    }
+
+    /**
+     * error text
+     * @throws Exception
+     */
+    public static function onConstValueNotInEnumError($constValue)
+    {
         throw new Exception("Const Value: {$constValue} is not in enum " . __CLASS__);
     }
+
 
     /**
      * const name
@@ -107,7 +120,7 @@ abstract class Enum
      * @throws ReflectionException
      * @throws Exception
      */
-    public function __construct($constValue = null)
+    private function __construct($constValue = null)
     {
         if ($constValue === null) return;
 
@@ -127,15 +140,6 @@ abstract class Enum
         }
 
         if (is_null($this->constValue)) $this->onConstValueNotInEnumError($constValue);
-    }
-
-    /**
-     * error text
-     * @throws Exception
-     */
-    public function onConstValueNotInEnumError($constValue)
-    {
-        throw new Exception("Const Value: {$constValue} is not in enum " . __CLASS__);
     }
 
     /**
