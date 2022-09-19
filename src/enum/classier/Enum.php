@@ -87,7 +87,7 @@ abstract class Enum
 
         foreach ($constants as $instance) {
             if ($instance->constValue === $constValue) {
-                return clone $instance;
+                return $instance;
             }
         }
 
