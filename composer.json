@@ -16,7 +16,9 @@
       "email": "wgx954418992@qq.com"
     }
   ],
-  "require": {},
+  "require": {
+    "ext-json": "*"
+  },
   "autoload": {
     "files": [],
     "psr-4": {
