@@ -103,7 +103,9 @@ try {
         ->then(OrderStatus::COMMENTED, function () {
             echo '命中 COMMENTED' . PHP_EOL;
         })
-        ->fetch();
+        ->default(function (){
+            echo '默认' . PHP_EOL;
+        });
 } catch (Exception $e) {
     exit($e->getMessage());
 }

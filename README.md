@@ -103,7 +103,9 @@ try {
         ->then(OrderStatus::COMMENTED, function () {
             echo 'Hit COMMENTED' . PHP_EOL;
         })
-        ->fetch();
+        ->default(function (){
+            echo 'default' . PHP_EOL;
+        });
 
 } catch (Exception $e) {
     exit($e->getMessage());

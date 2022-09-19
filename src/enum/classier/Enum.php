@@ -123,12 +123,6 @@ abstract class Enum
     protected $realValue;
 
     /**
-     * switch 如果是false 则停止继续往下匹配，如果是true，则继续匹配
-     * @var bool
-     */
-    protected $thenState = true;
-
-    /**
      * Enum constructor.
      * @param $constValue
      * @throws Exception
@@ -187,8 +181,6 @@ abstract class Enum
      */
     public function then()
     {
-        if (!$this->thenState) return $this;
-
         $parameters = func_get_args();
 
         if (count($parameters) < 2) throw new Exception('then parameters error');
@@ -208,20 +200,21 @@ abstract class Enum
 
         if (!$then) return $this;
 
-        $result = call_user_func_array($callback, [$this]);
-
-        $this->thenState = !($result === false);
+        call_user_func_array($callback, [$this]);
 
         return $this;
     }
 
     /**
-     * fetch
-     * @return void
+     * default
+     * @param callable|null $callback
+     * @return $this
      */
-    public function fetch()
+    public function default(?callable $callback)
     {
-        $this->thenState = true;
+        call_user_func_array($callback, [$this]);
+
+        return $this;
     }
 
     /**
