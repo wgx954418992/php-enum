@@ -91,9 +91,10 @@ try {
 
     echo PHP_EOL;
 
-    $status->then(OrderStatus::WAIT_PAY, OrderStatus::PAYED, function () {
-        echo 'Hit WAIT_PAY,PAYED' . PHP_EOL;
-    })
+    $status
+        ->then(OrderStatus::WAIT_PAY, OrderStatus::PAYED, function () {
+            echo 'Hit WAIT_PAY,PAYED' . PHP_EOL;
+        })
         ->then(OrderStatus::DELIVERING, function () {
             echo 'Hit DELIVERING' . PHP_EOL;
         })
@@ -105,7 +106,8 @@ try {
         })
         ->default(function (){
             echo 'default' . PHP_EOL;
-        });
+        })
+        ->fetch();
 
 } catch (Exception $e) {
     exit($e->getMessage());

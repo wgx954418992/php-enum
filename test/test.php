@@ -152,9 +152,10 @@ function testOrderStatus()
         ->then(OrderStatus::COMMENTED, function () {
             echo 'Hit COMMENTED' . PHP_EOL;
         })
-        ->default(function (){
+        ->default(function () {
             echo 'default' . PHP_EOL;
-        });
+        })
+        ->fetch();
 }
 
 /**
@@ -186,9 +187,10 @@ function testOrderStatusInt()
         ->then(OrderStatusInt::COMMENTED, function () {
             echo 'Hit COMMENTED' . PHP_EOL;
         })
-        ->default(function (){
+        ->default(function () {
             echo 'default' . PHP_EOL;
-        });
+        })
+        ->fetch();
 }
 
 try {
