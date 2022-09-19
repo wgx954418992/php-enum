@@ -87,7 +87,7 @@ abstract class Enum
 
         foreach ($constants as $instance) {
             if ($instance->constValue === $constValue) {
-                return $instance;
+                return clone $instance;
             }
         }
 
@@ -121,6 +121,12 @@ abstract class Enum
      * @var mixed|null
      */
     protected $realValue;
+
+    /**
+     * switch 如果是false 则停止继续往下匹配，如果是true，则继续匹配
+     * @var bool
+     */
+    protected $thenState = true;
 
     /**
      * Enum constructor.
@@ -181,6 +187,8 @@ abstract class Enum
      */
     public function then()
     {
+        if (!$this->thenState) return $this;
+
         $parameters = func_get_args();
 
         if (count($parameters) < 2) throw new Exception('then parameters error');
@@ -200,7 +208,9 @@ abstract class Enum
 
         if (!$then) return $this;
 
-        call_user_func_array($callback, [$this]);
+        $result = call_user_func_array($callback, [$this]);
+
+        if ($result === false) $this->thenState = false;
 
         return $this;
     }
@@ -212,9 +222,22 @@ abstract class Enum
      */
     public function default(?callable $callback)
     {
+        if (!$this->thenState) return $this;
+
         call_user_func_array($callback, [$this]);
 
+        $this->thenState = false;
+
         return $this;
+    }
+
+    /**
+     * fetch
+     * @return void
+     */
+    public function fetch()
+    {
+        $this->thenState = true;
     }
 
     /**
@@ -254,6 +277,14 @@ abstract class Enum
     public function getValue()
     {
         return $this->realValue ?? $this->constValue;
+    }
+
+    /**
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->thenState = true;
     }
 
     /**
