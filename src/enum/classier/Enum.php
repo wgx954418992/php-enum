@@ -70,19 +70,19 @@ abstract class Enum
 
     /**
      * instance
-     * @param $constValue
+     * @param null $constValue
      * @return void|static
      * @throws ReflectionException
      * @throws Exception
      */
     public static function i($constValue = null)
     {
-        $constants = self::getIConstants();
+        $constants = static::getIConstants();
 
         if ($constValue instanceof Enum) {
             $constValue = $constValue->constValue;
-        }else{
-            $constValue = self::parseValue($constValue);
+        } else {
+            $constValue = static::parseValue($constValue);
         }
 
         foreach ($constants as $instance) {
@@ -91,7 +91,7 @@ abstract class Enum
             }
         }
 
-        self::onConstValueNotInEnumError($constValue);
+        static::onConstValueNotInEnumError($constValue);
     }
 
     /**
@@ -130,20 +130,20 @@ abstract class Enum
 
     /**
      * Enum constructor.
-     * @param mixed|null $constValue
-     * @throws ReflectionException
+     * @param $constValue
      * @throws Exception
+     * @throws ReflectionException
      */
     private function __construct($constValue = null)
     {
         if ($constValue === null) return;
 
-        $constants = self::getIConstants($this);
+        $constants = static::getIConstants($this);
 
         if ($constValue instanceof Enum) {
             $constValue = $constValue->constValue;
-        }else{
-            $constValue = self::parseValue($constValue);
+        } else {
+            $constValue = static::parseValue($constValue);
         }
 
         foreach ($constants as $instance) {
@@ -167,7 +167,7 @@ abstract class Enum
      */
     public function getConstants(): array
     {
-        return self::getIConstants();
+        return static::getIConstants();
     }
 
     /**
@@ -177,7 +177,7 @@ abstract class Enum
      */
     public static function getConstantsWithStatic(): array
     {
-        return self::getIConstants();
+        return static::getIConstants();
     }
 
     /**
