@@ -25,7 +25,6 @@
       "enum\\": "src/enum/"
     }
   },
-  "minimum-stability": "stable",
   "config": {
     "sort-packages": true
   }
